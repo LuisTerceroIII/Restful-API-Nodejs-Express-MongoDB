@@ -1,0 +1,16 @@
+doctype html
+head
+    link(rel='stylesheet', href='styles.css')
+    link(rel="stylesheet", href="https://fonts.googleapis.com/css?family=Playfair+Display&display=swap")
+body
+    div(class="principal-container")
+        div(class="logo-container")
+            img(src="https://image.flaticon.com/icons/png/512/64/64886.png", alt="key", class="logo-image")
+        h2(class="welcome-text") Join us sending your request:
+
+        form(action="/post" method="POST", class="form-container", id='form')
+            input(type="text" name="user_name", placeholder="Name", class='input-form')
+            input(type="text" name="user_lastName", placeholder="Last Name", class='input-form')
+            input(type="text" name="user_age", placeholder="Age", class='input-form')
+            input(type="text" name="user_email", placeholder="Email", class='input-form')
+            input(class="button",type="submit", value="Send")

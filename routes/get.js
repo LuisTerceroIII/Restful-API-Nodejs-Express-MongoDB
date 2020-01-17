@@ -366,52 +366,87 @@ router.put('/modifyById/:id/email/:email', (req,res) => {//Probar con siguiente 
 router.put('/edit/contact/:id', (req,res) =>{
 
     let id = parseInt(req.params.id, 10)
+    console.log(req.body.user_name)
 
     let res_json = [{status: 200 , success : true , message : 'The edition was complete'}]
 
-    let editContact  = {
+    
 
-     basicInfo : {
+    ContactDBFull.findOne({'basicInfo.id': id}, (err,contact)=>{
 
-        id : id,
-        name : req.body.user_name,
-        lastName : req.body.user_lastName,
-        age : req.body.user_age,
-        email : req.body.user_email
-    },
+        var editContact = {}
+        console.log(contact)
 
-     infoExtra : {
-        company : req.body.user_company,
-        homepage : req.body.user_homepage,
-        /* birthday : req.body.user_birthday, */
-        relative : {
-            sister : req.body.user_sister,
-            mom : req.body.user_mom,
-            dad : req.body.user_dad
+        if(err) throw res.status(500).send({status: 500 ,success: false,message:'We can´t connect right now, try later', error:err})
+
+        if(req.body.user_name !== '' && req.body.user_name !== contact.basicInfo.name){
+            editContact.name = req.body.user_name
         }
-    },
+        if(req.body.user_lastName !== '' && req.body.user_lastName !== contact.basicInfo.lastName){
+            editContact.lastName = req.body.user_lastName
+        }
+        if(req.body.user_age !== null && req.body.user_age !== contact.basicInfo.age){
+            editContact.age = parseInt(req.body.user_age)
+        }
+        if(req.body.user_email !== '' && req.body.user_email !== contact.basicInfo.email){
+            editContact.email = req.body.user_email
+        }
+        if(req.body.user_company !== '' && req.body.user_company !== contact.infoExtra.company){
+            editContact.company = req.body.user_company
+        }
+        if(req.body.user_homepage !== '' && req.body.user_homepage !==  contact.infoExtra.homepage){
+            editContact.homepage = req.body.user_homepage
+        }
+        if(req.body.user_sister !== '' && req.body.user_sister !== contact.infoExtra.family.sister){
+            editContact.sister = req.body.user_sister
+        }
+        if(req.body.user_mom !== '' && req.body.user_mom !== contact.infoExtra.family.mom){
+            editContact.mom = req.body.user_mom
+        }
+        if(req.body_user_dad !== '' && req.body.user_dad !== contact.infoExtra.family.dad){
+            editContact.dad = req.body.user_dad
+        }
+        if(req.body.user_note != '' && req.body.user_note !== contact.notes.note){
+            editContact.note = req.body.user_note
+        }
 
-     notes : {
+        console.log(editContact)
+        
+        ContactDBFull.findOneAndUpdate({'basicInfo.id' : id},{$set: editContact }  ,(err,result) =>{
 
-        note_0: {
+            if(err) throw res.status(500).send({status: 500 ,success: false,message:'We can not save the changes', error:err})
 
-            /* date : date(), */
-            message : req.body.note
+            console.log(result)
 
-        }  
-    }
-    }
+            res_json.push(editContact)
 
-    console.log(editContact)
+            res.status(200).send(res_json)
 
-    ContactDBFull.findOneAndUpdate({'basicInfo.id': id},editContact,(err,result) => {
 
-        if(err) throw res.status(500).send({status: 500 ,success: false,message:'We can´t connect right now, try later', error:err});
+        })
+    })
+})
 
     
 
-        console.log(result)
-      
+
+
+       
+
+    //console.log(util.inspect(contacts_json[2], false, null));
+   /*  console.log(util.inspect(`Edit contact ${editContact}\n -------------------------------------------------`,false,null))
+    console.log(`En Edit aun: ${JSON.stringify(editContact)}`)
+ */
+
+    /* ContactDBFull.findOneAndUpdate({'basicInfo.id': id},(err,result) => {
+
+        if(err) throw res.status(500).send({status: 500 ,success: false,message:'We can´t connect right now, try later', error:err})
+
+
+    
+
+        console.log(`---------------------------------------------------------\nResult ${result}`)
+    
 
 
 
@@ -426,15 +461,18 @@ router.put('/edit/contact/:id', (req,res) =>{
        
 
             res.status(500).send({status: 200 ,success: true ,message:'Nothing change', editContact}) */
-            
-        
+               
 
-    })
     
+     
 
 
-})
 
+
+
+
+
+    
 
 
     

@@ -8,18 +8,14 @@ let contactFullSchema = new Schema({
   phoneNumber: { type: String },
   age: { type: Number },
   email: { type: String },
-
   company: { type: String },
-  homepage: { type: String }, // const birthday = new Date(`${moth} ${day}`)
-  /*  birthday : {type : Date}, */
+  homepage: { type: String }, 
   family: {
     sister: [{ type: String }],
     brother: [{ type: String }],
     mom: { type: String },
     dad: { type: String }
   },
-
-  /* date: {type: Date}, */
   note: { type: String }
 });
 

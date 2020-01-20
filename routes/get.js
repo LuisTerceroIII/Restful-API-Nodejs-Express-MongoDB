@@ -11,89 +11,75 @@ const util = require("util");
 //------------------------GET------------------------------
 
 router.get("/", (req, res) => {
+
   ContactDBFull.find((err, contact) => {
     if (err)
-      throw res.status(500).send({
-        status: "500",
-        success: false,
-        message: "We can´t connect right now, try later",
+      res.status(500).json({
         error: err
       });
 
-    let contacts_json = [
-      { status: "200", success: true, message: "We are connect right now!" }
-    ];
+    contacts_json = []
 
-    res.status(200).send(contact);
-    /* contact.forEach((contact)=>{
-            
-            let userFull = {
-                id: contact.id,
-                name: contact.name,
-                lastName : contact.lastName,
-                age : contact.age,
-                email : contact.email
-            }
-              
-          
-            /* if(user.name)
-            co */
+    
+    contact.forEach( contact => {
+    
+      let user = {
+
+        id: contact.id,
+        name: contact.name,
+        lastName : contact.lastName,
+        phoneNumber : contact.phoneNumber,
+        age : contact.age,
+        email : contact.email
+
+      }
+
+      contacts_json.push(user)
   });
 
-  /* res.status(200).send(contacts_json) */
+  res.status(200).send(contacts_json);
+
+ 
 });
 
-/* }) */
-
 router.get("/details", (req, res) => {
-  let contacts_json = [
-    { status: "200", success: true, message: "We are connect right now!" }
-  ];
+
+  let contacts_json = []
 
   ContactDBFull.find({}, (err, contact) => {
     if (err)
       throw res.status(500).send({
-        status: "500",
-        success: false,
-        message: "We can´t connect right now, try later",
         error: err
       });
 
     contact.forEach(user => {
-      let userFull = [
-        (basicInfo = {
-          id: user.basicInfo.id,
-          name: user.basicInfo.name,
-          lastName: user.basicInfo.lastName,
-          age: user.basicInfo.age,
-          email: user.basicInfo.email
-        }),
-        (infoExtra = {
-          company: user.infoExtra.company,
-          homepage: user.infoExtra.homepage,
 
-          /* birthday : req.body.user_birthday, */
-          family: {
-            sister: user.infoExtra.family.sister,
-            mom: user.infoExtra.family.mom,
-            dad: user.infoExtra.family.dad
+      let userFull = {        
+          id: user.id,
+          name: user.name,
+          lastName: user.lastName,
+          phoneNumber : user.phoneNumber,
+          age: user.age,
+          email: user.email,
+          company: user.company,
+          homepage: user.homepage,
+          family = {
+            sister: user.family.sister,
+            mom: user.family.mom,
+            dad: user.family.dad
+          },
+          notes = {
+            note: user.note
           }
-        }),
-        (notes = {
-          note: user.notes.note
-        })
-      ];
-
-      contacts_json.push(userFull);
-    });
+      }
+      contacts_json.push(userFull)
+    })
 
     if (contacts_json.length > 1) {
       res.status(200).send(contacts_json);
     } else {
-      res.status(200).send({
-        status: 200,
-        success: true,
-        message: "Your collection is empty"
+      res.status(204).send({
+        message: "Your collection is empty - No content"
       });
     }
   });
@@ -139,6 +125,7 @@ router.get("/searchById/:id", (req, res) => {
 
 router.post("/create", (req, res) => {
   let len = () => {
+
     return ContactDBFull.countDocuments({})
       .then(result => {
         return result;
@@ -148,22 +135,21 @@ router.post("/create", (req, res) => {
 
   len().then(result => {
     let user = new ContactDBFull({
-      basicInfo: {
         id: result + 1,
         name: req.body.user_name,
         lastName: req.body.user_lastName,
         age: req.body.user_age,
         email: req.body.user_email
       }
-    });
+    );
     console.log(user.name);
 
     if (
       idValidation.isValid(
-        user.basicInfo.name,
-        user.basicInfo.lastName,
-        user.basicInfo.age,
-        user.basicInfo.email
+        user.name,
+        user.lastName,
+        user.age,
+        user.email
       )
     ) {
       user.save(err => {
@@ -171,37 +157,27 @@ router.post("/create", (req, res) => {
       });
       ContactDBFull.find(async (err, contact) => {
         if (err)
-          throw res.status(500).send({
-            status: 500,
-            success: false,
-            message: "We can´t connect right now, try later",
-            error: err
-          });
-        let contacts_json = [
-          {
-            status: "200",
-            success: true,
-            message: "We create a new contact successfuly"
-          }
-        ];
+          throw res.status(500).json({error: err});
 
+        let contacts_json = [];
         contact.forEach(contact => {
           let userFull = {
-            id: contact.basicInfo.id,
-            name: contact.basicInfo.name,
-            lastName: contact.basicInfo.lastName,
-            age: contact.basicInfo.age,
-            email: contact.basicInfo.email
+            id: contact.id,
+            name: contact.name,
+            lastName: contact.lastName,
+            phoneNumber : contact.phoneNumber,
+            age: contact.age,
+            email: contact.email
           };
           contacts_json.push(userFull);
         });
         //console.log(util.inspect(contacts_json[2], false, null));
-        if (contacts_json.length !== 1) {
+        if (contacts_json.length > 0 ) {
           res.status(200).send(contacts_json);
         } else {
-          contacts_json.push({ result: "Not found any contact whit that id" });
+          contacts_json.push({ result: "No content" });
 
-          res.status(200).send(contacts_json);
+          res.status(204).send(contacts_json);
         }
       });
     } else {
@@ -224,8 +200,8 @@ router.post("/", (req, res) => {
 
   const { name = null, lastName, phoneNumber, age, email } = req.body;
 
-  console.log('AGE : ' + age)
-  console.log(typeof age)
+  console.log("AGE : " + age);
+  console.log(typeof age);
 
   if (!name) res.status(400).json({ error: "name is require" });
   if (name.length < 3)
@@ -234,7 +210,7 @@ router.post("/", (req, res) => {
   if (lastName.length < 3)
     res.status(400).json({ error: "Lastname minimun 3 character" });
   if (!phoneNumber) res.status(400).json({ error: "phone number is require" });
-  if (phoneNumber.length === 7 )
+  if (phoneNumber.length === 7)
     res.status(400).json({ error: "phone number must have 8 numbers" });
   if (!age) res.status(400).json({ error: "name is require" });
   if (age < 0 && age > 120)
@@ -243,12 +219,12 @@ router.post("/", (req, res) => {
   if (email.length < 3)
     res.status(400).json({ error: "email minimum 3 character" });
 
-    let user = new ContactDBFull({name,lastName,phoneNumber,age,email})
+  let user = new ContactDBFull({ name, lastName, phoneNumber, age, email });
 
-  user.save((err,contact) => {
-      if(err) res.status(500).json({err: err.message})
-      res.status(200).json(contact)
-  } )
+  user.save((err, contact) => {
+    if (err) res.status(500).json({ err: err.message });
+    res.status(200).json(contact);
+  });
   return null;
   len().then(result => {
     let user = new ContactDBFull({

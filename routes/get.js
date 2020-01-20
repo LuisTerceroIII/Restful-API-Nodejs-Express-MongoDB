@@ -9,185 +9,42 @@ const util = require("util");
 
 //------------------------GET------------------------------
 
-router.get("/", (req, res) => {
-
-  ContactDBFull.find((err, contact) => {
-    if (err)
-      res.status(500).json({
-        error: err
-      });
-
-    contacts_json = []
-
-    
-    contact.forEach( contact => {
-    
-      let user = {
-
-        id: contact.id,
-        name: contact.name,
-        lastName : contact.lastName,
-        phoneNumber : contact.phoneNumber,
-        age : contact.age,
-        email : contact.email
-
-      }
-
-      contacts_json.push(user)
-  });
-
-  res.status(200).json(contacts_json);
-
- 
+router.get("/", async (req, res) => {
+  try {
+    const result = await ContactDBFull.find().exec();
+    res.status(200).json(result);
+  } catch (err) {
+    res.status(500).json(err.message);
+  }
 });
 
-router.get("/details", (req, res) => {
-
-  let contacts_json = []
-
-  ContactDBFull.find({}, (err, contact) => {
-    if (err)
-      throw res.status(500).json({
-        error: err.message
-      });
-
-    contact.forEach(user => {
-
-      let userFull = {        
-          id: user.id,
-          name: user.name,
-          lastName: user.lastName,
-          phoneNumber : user.phoneNumber,
-          age: user.age,
-          email: user.email,
-          company: user.company,
-          homepage: user.homepage,
-          family = {
-            sister: user.family.sister,
-            mom: user.family.mom,
-            dad: user.family.dad
-          },
-          notes = {
-            note: user.note
-          }
-      }
-      contacts_json.push(userFull)
-    })
-
-    if (contacts_json.length > 1) {
-      res.status(200).json(contacts_json);
-    } else {
-      res.status(204).json({
-        message: "Your collection is empty - No content"
-      });
-    }
-  });
-});
-
-router.get("/:id", (req, res) => {
-  let id = parseInt(req.params.id, 10);
-  ContactDBFull.find({ "id": id }, async (err, contact) => {
-    if (err)
-      throw res.status(500).json({error: err.message});
-    let contacts_json = [];
-    contact.forEach(contact => {
-      let userBasic = {
-        id: contact.id,
-        name: contact.name,
-        lastName: contact.lastName,
-        age: contact.age,
-        email: contact.email
-      };
-
-      contacts_json.push(userBasic);
-    });
-
-    if (contacts_json.length > 0) {
-      res.status(200).json(contacts_json);
-    } else {
-      contacts_json.push({ result: "Not found any contact whit that id" });
-
-      res.status(404).json(contacts_json);
-    }
-  });
+router.get("/:id", async (req, res) => {
+  let id = req.params.id;
+  try {
+    const result = await ContactDBFull.findOne({ _id: id }).exec();
+    res.status(200).json(result);
+  } catch (err) {
+    res.status(500).json(err.message);
+  }
 });
 
 //------------------------POST------------------------------
 
-router.post("/create", (req, res) => {
-  let len = () => {
-
-    return ContactDBFull.countDocuments({})
-      .then(result => {
-        return result;
-      })
-      .catch(err => err);
-  };
-
-  len().then(result => {
-    let user = new ContactDBFull({
-        id: result + 1,
-        name: req.body.user_name,
-        lastName: req.body.user_lastName,
-        age: req.body.user_age,
-        email: req.body.user_email
-      }
-    );
-    if (
-      idValidation.isValid(
-        user.name,
-        user.lastName,
-        user.age,
-        user.email
-      )
-    ) {
-      user.save(err => {
-        if (err) throw err;
-      });
-      ContactDBFull.find(async (err, contact) => {
-        if (err)
-          throw res.status(500).json({error: err});
-
-        let contacts_json = [];
-
-        contact.forEach(contact => {
-          let userFull = {
-            id: contact.id,
-            name: contact.name,
-            lastName: contact.lastName,
-            phoneNumber : contact.phoneNumber,
-            age: contact.age,
-            email: contact.email
-          };
-          contacts_json.push(userFull);
-        });
-        //console.log(util.inspect(contacts_json[2], false, null));
-        if (contacts_json.length > 0 ) {
-          res.status(200).json(contacts_json);
-        } else {
-          contacts_json.push({ result: "No content" });
-
-          res.status(204).json(contacts_json);
-        }
-      });
-    } else {
-      res.status(200).json({
-        message: "Not create - Verify personal information"
-      });
-    }
-  });
-});
-
 router.post("/", (req, res) => {
-  let len = () => {
-    return ContactDB.countDocuments({})
-      .then(result => {
-        return result;
-      })
-      .catch(err => err);
-  };
-
-  const { name = null, lastName, phoneNumber, age, email } = req.body;
+  const {
+    name = null,
+    lastName,
+    phoneNumber,
+    age,
+    email,
+    company,
+    homepage,
+    sister,
+    brother,
+    dad,
+    mom,
+    note
+  } = req.body;
 
   if (!name) res.status(400).json({ error: "name is require" });
   if (name.length < 3)
@@ -198,153 +55,208 @@ router.post("/", (req, res) => {
   if (!phoneNumber) res.status(400).json({ error: "phone number is require" });
   if (phoneNumber.length === 7)
     res.status(400).json({ error: "phone number must have 8 numbers" });
-  if (!age) res.status(400).json({ error: "name is require" });
+  if (!age) res.status(400).json({ error: "age is require" });
   if (age < 0 && age > 120)
     res.status(400).json({ error: "Your age is wrong" });
   if (!email) res.status(400).json({ error: "email is require" });
   if (email.length < 3)
     res.status(400).json({ error: "email minimum 3 character" });
+  //Hasta aqui los necesarios/obligatorios
+  if (company)
+    if (company.length < 2)
+      res.status(400).json({ error: "Company minimum 2 character" });
+  if (homepage)
+    if (homepage.length < 5)
+      res.status(400).json({ error: "Homepage minimum 5 character" });
+  if (sister)
+    if (sister.length < 3)
+      res.status(400).json({ error: "Sister name minimum 3 character" });
+  if (brother)
+    if (brother.length < 3)
+      res.status(400).json({ error: "Brother name minimum 3 character" });
+  if (dad)
+    if (dad.length < 3)
+      res.status(400).json({ error: "Dad name minimum 3 character" });
+  if (mom)
+    if (mom.length < 3)
+      res.status(400).json({ error: "Mom name minimum 3 character" });
 
-  let user = new ContactDBFull({ name, lastName, phoneNumber, age, email });
+  let user = new ContactDBFull({
+    name,
+    lastName,
+    phoneNumber,
+    age,
+    email,
+    company,
+    homepage,
+    family: {
+      sister,
+      brother,
+      dad,
+      mom
+    }
+  });
 
   user.save((err, contact) => {
     if (err) res.status(500).json({ err: err.message });
     res.status(200).json(contact);
   });
-  return null;
- 
 });
 
 //------------------------DELETE------------------------------
 
-router.delete("/:id", (req, res) => {
-
-  let id = parseInt(req.params.id, 10);
-
-  ContactDB.findOneAndDelete({ id: id }, (err, result) => {
-    if (err)
-      throw res.status(500).json({error: err.message});
-
-    let response_json = []
-
-    let deleteContact = {
-      id: result.id,
-      name: result.name,
-      lastName: result.lastName,
-      age: result.age,
-      email: result.email
-    };
-
-    response_json.push(deleteContact);
-
-    if (response_json.length > 0) {
-      res.status(200).json(response_json);
-    } else {
-      response_json.push({ result: "Not found any contact whit that id" });
-
-      res.status(204).json(response_json);
-    }
-  });
+router.delete("/:id", async (req, res) => {
+  let id = req.params.id;
+  try {
+    const result = await ContactDBFull.findOneAndDelete({ _id: id }).exec();
+    if (result !== null) res.status(200).json(result);
+    else res.status(200).json({ message: "No valid id" });
+  } catch (err) {
+    res.status(400).json(err.message);
+  }
 });
-
-router.delete("/deleteAll", (req, res) => {
-  ContactDB.deleteMany({}, (err, result) => {
-    res
-      .status(200)
-      .json({ message: "jaujauajaua i delete all motherfuckers!" });
-  });
-});
-
 //------------------------PUT------------------------------
 
-router.put("/:id", (req, res) => {
-  let id = parseInt(req.params.id, 10);
-  console.log(req.body.user_name);
+router.patch("/:id", async (req, res) => {
+  let id = req.params.id;
+  try {
+    var contacto = await ContactDBFull.findOne({ _id: id }).exec();
+  } catch (err) {
+    res.status(400).json(err.message);
+  }
+  let editContact = {
+    family: {
+      sister: contacto.family.sister,
+      brother: contacto.family.brother,
+      mom: contacto.family.mom,
+      dad: contacto.family.dad
+    }
+  };
+  const {
+    name = null,
+    lastName,
+    phoneNumber,
+    age,
+    email,
+    company,
+    homepage,
+    sister,
+    brother,
+    dad,
+    mom,
+    note
+  } = req.body;
 
-  let res_json = [];
-
-  ContactDBFull.findOne({ "id": id }, (err, contact) => {
-    var editContact = {};
+  try {
+    var contact = await ContactDBFull.findOne({ _id: id }).exec();
     console.log(contact);
 
-    if (err)
-      throw res.status(500).json({error: err.message});
+    if (
+      name !== undefined &&
+      name !== null &&
+      name !== "" &&
+      name !== contact.name
+    ) {
+      editContact.name = name;
+    }
+    if (
+      lastName !== undefined &&
+      lastName !== null &&
+      lastName !== "" &&
+      lastName !== contact.lastName
+    ) {
+      editContact.lastName = lastName;
+    }
+    if (
+      phoneNumber !== undefined &&
+      phoneNumber !== null &&
+      phoneNumber !== "" &&
+      phoneNumber !== contact.phoneNumber
+    ) {
+      editContact.phoneNumber = phoneNumber;
+    }
+    if (age !== undefined && age !== null && age !== contact.age) {
+      editContact.age = age;
+    }
+    if (
+      email !== undefined &&
+      email !== null &&
+      email !== "" &&
+      email !== contact.email
+    ) {
+      editContact.email = email;
+    }
+    if (
+      company !== undefined &&
+      company !== null &&
+      company !== "" &&
+      company !== contact.company
+    ) {
+      editContact.company = company;
+    }
+    if (
+      homepage !== undefined &&
+      homepage !== null &&
+      homepage !== "" &&
+      homepage !== contact.homepage
+    ) {
+      editContact.homepage = homepage;
+    }
 
     if (
-      req.body.user_name !== "" &&
-      req.body.user_name !== contact.name
+      sister !== undefined &&
+      sister !== null &&
+      sister !== "" &&
+      sister !== contact.family.sister
     ) {
-      editContact.name = req.body.user_name;
+      editContact.family.sister = sister;
     }
     if (
-      req.body.user_lastName !== "" &&
-      req.body.user_lastName !== contact.lastName
+      brother !== undefined &&
+      brother !== null &&
+      brother !== "" &&
+      brother !== contact.family.brother
     ) {
-      editContact.lastName = req.body.user_lastName;
+      editContact.family.brother = brother;
     }
     if (
-      req.body.user_age !== null &&
-      req.body.user_age !== contact.age
+      mom !== undefined &&
+      mom !== null &&
+      mom !== "" &&
+      mom !== contact.family.mom
     ) {
-      editContact.age = parseInt(req.body.user_age);
+      editContact.family.mom = mom;
     }
     if (
-      req.body.user_email !== "" &&
-      req.body.user_email !== contact.email
+      dad !== undefined &&
+      dad !== null &&
+      dad !== "" &&
+      dad !== contact.family.dad
     ) {
-      editContact.email = req.body.user_email;
+      editContact.family.dad = dad;
     }
     if (
-      req.body.user_company !== "" &&
-      req.body.user_company !== contact.company
+      note !== undefined &&
+      note !== null &&
+      note !== "" &&
+      note !== contact.note
     ) {
-      editContact.company = req.body.user_company;
-    }
-    if (
-      req.body.user_homepage !== "" &&
-      req.body.user_homepage !== contact.homepage
-    ) {
-      editContact.homepage = req.body.user_homepage;
-    }
-    if (
-      req.body.user_sister !== "" &&
-      req.body.user_sister !== contact.family.sister
-    ) {
-      editContact.family.sister = req.body.user_sister;
-    }
-    if (
-      req.body.user_mom !== "" &&
-      req.body.user_mom !== contact.family.mom
-    ) {
-      editContact.family.mom = req.body.user_mom;
-    }
-    if (
-      req.body_user_dad !== "" &&
-      req.body.user_dad !== contact.family.dad
-    ) {
-      editContact.family.dad = req.body.user_dad;
-    }
-    if (req.body.user_note != "" && req.body.user_note !== contact.note) {
-      editContact.note = req.body.user_note;
+      editContact.note = note;
     }
 
-    
-
-    ContactDBFull.findOneAndUpdate(
-      { "id": id },
-      { $set: editContact },
-      (err, result) => {
-        if (err)
-          throw res.status(500).json({error: err.message});
-
-        res_json.push(editContact);
-
-        res.status(200).json(res_json);
-      }
-    );
-  });
+    console.log(editContact);
+  } catch (err) {
+    res.status(500).json(err.message);
+  }
+  try {
+    const result = await ContactDBFull.findByIdAndUpdate(
+      { _id: id },
+      editContact
+    ).exec();
+    res.status(200).json(result);
+  } catch (err) {
+    res.status(500).json(err.message);
+  }
 });
-
-
 
 module.exports = router;

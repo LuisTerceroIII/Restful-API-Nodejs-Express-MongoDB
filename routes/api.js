@@ -1,11 +1,8 @@
 const express = require("express");
 const router = express.Router();
-const idValidation = require("../public/JS/idValidation");
-const mongoose = require("mongoose");
-const ContactDB = require("../models/contact");
 const ContactDBFull = require("../models/contactFull");
-const _ = require("lodash");
-const util = require("util");
+/* const _ = require("lodash");
+const util = require("util"); */
 
 //------------------------GET------------------------------
 
@@ -118,7 +115,7 @@ router.delete("/:id", async (req, res) => {
     res.status(400).json(err.message);
   }
 });
-//------------------------PUT------------------------------
+//------------------------PATCH------------------------------
 
 router.patch("/:id", async (req, res) => {
   let id = req.params.id;

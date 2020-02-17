@@ -3,7 +3,7 @@ const app = express();
 const port = 3000;
 const db = require('./db/db');
 const mongoose = require('mongoose')
-const contacts = require('./models/contact')
+
 
 
 var path = require('path');

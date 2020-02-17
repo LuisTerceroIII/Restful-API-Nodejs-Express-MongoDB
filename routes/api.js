@@ -1,9 +1,9 @@
 const express = require("express");
 const router = express.Router();
-const idValidation = require("./../public/JS/idValidation");
+const idValidation = require("../public/JS/idValidation");
 const mongoose = require("mongoose");
-const ContactDB = require("./../models/contact");
-const ContactDBFull = require("./../models/contactFull");
+const ContactDB = require("../models/contact");
+const ContactDBFull = require("../models/contactFull");
 const _ = require("lodash");
 const util = require("util");
 
@@ -39,10 +39,13 @@ router.post("/", (req, res) => {
     email,
     company,
     homepage,
-    sister,
-    brother,
-    dad,
-    mom,
+    family: {
+      sister,
+      brother,
+      dad,
+      mom,
+    },
+    
     note
   } = req.body;
 
@@ -245,6 +248,7 @@ router.patch("/:id", async (req, res) => {
     }
 
     console.log(editContact);
+
   } catch (err) {
     res.status(500).json(err.message);
   }

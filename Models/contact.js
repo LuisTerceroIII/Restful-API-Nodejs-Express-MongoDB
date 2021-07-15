@@ -1,4 +1,4 @@
-const mongoose = require('../config/mongoose/connectionDb')
+const mongoose = require('../Config/Dbconection/connectionDb')
 const Schema = mongoose.Schema
 
 let contactSchema = new Schema({

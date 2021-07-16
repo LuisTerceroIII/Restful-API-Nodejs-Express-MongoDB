@@ -23,15 +23,8 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="082b7e8e-e10f-449f-9d6f-a1014a3500f5" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/Middlewares/newContactInfoValidation.middleware.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Services/normalizeContact.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/inspectionProfiles/Project_Default.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/inspectionProfiles/Project_Default.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Controllers/contacts.controller.js" beforeDir="false" afterPath="$PROJECT_DIR$/Controllers/contacts.controller.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Models/contactFull.js" beforeDir="false" afterPath="$PROJECT_DIR$/Models/contactFull.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Routes/contacts.routes.js" beforeDir="false" afterPath="$PROJECT_DIR$/Routes/contacts.routes.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/package-lock.json" beforeDir="false" afterPath="$PROJECT_DIR$/package-lock.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/package.json" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -99,7 +92,7 @@
       <option name="presentableId" value="Default" />
       <updated>1626317097840</updated>
       <workItem from="1626317099161" duration="14446000" />
-      <workItem from="1626362041661" duration="25199000" />
+      <workItem from="1626362041661" duration="25701000" />
     </task>
     <servers />
   </component>

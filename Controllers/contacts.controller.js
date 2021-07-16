@@ -21,18 +21,21 @@ const getById = async (req,res,next) => {
 }
 
 const createContact = async (req,res,next) => {
+  try {
+    const newContact = await normalizeContact(req.body)
 
-  const newContact = await normalizeContact(req.body)
+    const contactToSave = new ContactDBFull(newContact);
 
-  const contactToSave = new ContactDBFull(newContact);
-
-  contactToSave.save((err, contact) => {
-    if (err){
-      res.status(500).json({ err: err.message })
-    } else {
-      res.status(200).json(contact);
-    }
-  });
+    contactToSave.save((err, contact) => {
+      if (err){
+        res.status(500).json({ err: err.message })
+      } else {
+        res.status(200).json(contact);
+      }
+    })
+  } catch (err) {
+    res.status(500).json({ err: err })
+  }
 }
 
 const deleteById = async (req,res,next) => {

@@ -5,7 +5,7 @@ let contactSchema = new Schema({
     id: {type: Number},
     name: {type: String},
     lastName: {type: String},
-    age: {type: Number , min: 0},
+    age: {type: Number, min: 0},
     email: {type: String}
 })
 
@@ -15,10 +15,6 @@ contactSchema.methods.presentation = () => {
 }
 
 let Contacts = mongoose.model('Contact', contactSchema);
-
-
-
-
 
 
 module.exports = Contacts;

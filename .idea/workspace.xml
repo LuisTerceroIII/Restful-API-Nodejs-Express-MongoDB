@@ -23,29 +23,15 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="082b7e8e-e10f-449f-9d6f-a1014a3500f5" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/.env" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/REST ful API.iml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/codeStyles/codeStyleConfig.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/inspectionProfiles/Project_Default.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/modules.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/vcs.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Controllers/contacts.controller.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Controllers/session.controller.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Models/user.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Routes/contacts.routes.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Routes/index.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Routes/session.routes.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Services/cryptoUserPass.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app.js" beforeDir="false" afterPath="$PROJECT_DIR$/app.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/config/mongoose/connectionDb.js" beforeDir="false" afterPath="$PROJECT_DIR$/Config/mongoose/connectionDb.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/models/contact.js" beforeDir="false" afterPath="$PROJECT_DIR$/Models/contact.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/models/contactFull.js" beforeDir="false" afterPath="$PROJECT_DIR$/Models/contactFull.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Middlewares/newContactInfoValidation.middleware.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Services/normalizeContact.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/inspectionProfiles/Project_Default.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/inspectionProfiles/Project_Default.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Controllers/contacts.controller.js" beforeDir="false" afterPath="$PROJECT_DIR$/Controllers/contacts.controller.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Models/contactFull.js" beforeDir="false" afterPath="$PROJECT_DIR$/Models/contactFull.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Routes/contacts.routes.js" beforeDir="false" afterPath="$PROJECT_DIR$/Routes/contacts.routes.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/package-lock.json" beforeDir="false" afterPath="$PROJECT_DIR$/package-lock.json" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/package.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/routes/api.js" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/routes/index.js" beforeDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -113,7 +99,7 @@
       <option name="presentableId" value="Default" />
       <updated>1626317097840</updated>
       <workItem from="1626317099161" duration="14446000" />
-      <workItem from="1626362041661" duration="15513000" />
+      <workItem from="1626362041661" duration="25199000" />
     </task>
     <servers />
   </component>
@@ -151,22 +137,22 @@
       <screen x="0" y="0" width="1600" height="900" />
     </state>
     <state x="580" y="205" key="FileChooserDialogImpl/0.0.1600.900@0.0.1600.900" timestamp="1626321879748" />
-    <state width="1579" height="229" key="GridCell.Tab.0.bottom" timestamp="1626319068038">
+    <state width="1579" height="229" key="GridCell.Tab.0.bottom" timestamp="1626409171400">
       <screen x="0" y="0" width="1600" height="900" />
     </state>
-    <state width="1579" height="229" key="GridCell.Tab.0.bottom/0.0.1600.900@0.0.1600.900" timestamp="1626319068038" />
-    <state width="1579" height="229" key="GridCell.Tab.0.center" timestamp="1626319068038">
+    <state width="1579" height="229" key="GridCell.Tab.0.bottom/0.0.1600.900@0.0.1600.900" timestamp="1626409171400" />
+    <state width="1579" height="229" key="GridCell.Tab.0.center" timestamp="1626409171400">
       <screen x="0" y="0" width="1600" height="900" />
     </state>
-    <state width="1579" height="229" key="GridCell.Tab.0.center/0.0.1600.900@0.0.1600.900" timestamp="1626319068038" />
-    <state width="1579" height="229" key="GridCell.Tab.0.left" timestamp="1626319068038">
+    <state width="1579" height="229" key="GridCell.Tab.0.center/0.0.1600.900@0.0.1600.900" timestamp="1626409171400" />
+    <state width="1579" height="229" key="GridCell.Tab.0.left" timestamp="1626409171400">
       <screen x="0" y="0" width="1600" height="900" />
     </state>
-    <state width="1579" height="229" key="GridCell.Tab.0.left/0.0.1600.900@0.0.1600.900" timestamp="1626319068038" />
-    <state width="1579" height="229" key="GridCell.Tab.0.right" timestamp="1626319068038">
+    <state width="1579" height="229" key="GridCell.Tab.0.left/0.0.1600.900@0.0.1600.900" timestamp="1626409171400" />
+    <state width="1579" height="229" key="GridCell.Tab.0.right" timestamp="1626409171400">
       <screen x="0" y="0" width="1600" height="900" />
     </state>
-    <state width="1579" height="229" key="GridCell.Tab.0.right/0.0.1600.900@0.0.1600.900" timestamp="1626319068038" />
+    <state width="1579" height="229" key="GridCell.Tab.0.right/0.0.1600.900@0.0.1600.900" timestamp="1626409171400" />
     <state x="301" y="95" key="SettingsEditor" timestamp="1626326873237">
       <screen x="0" y="0" width="1600" height="900" />
     </state>

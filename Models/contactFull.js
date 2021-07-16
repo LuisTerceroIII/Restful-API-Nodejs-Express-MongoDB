@@ -5,7 +5,7 @@ let contactFullSchema = new Schema({
   name: { type: String },
   lastName: { type: String },
   phoneNumber: { type: String },
-  age: { type: Number },
+  age: { type: Number, min: 0},
   email: { type: String },
   company: { type: String },
   homepage: { type: String }, 

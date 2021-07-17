@@ -1,8 +1,6 @@
-const validator = require('validator')
 const normalizeUser = require('../Services/nomalizeUser')
 const UserDB = require('../Models/user')
-
-const isEmpty = (object) => Object.keys(object).length === 0
+const {isValidEmail, emailIsEmpty, isValidName, nameIsEmpty, isEmptyObject} = require('../Services/CommonValidation')
 
 const validateEmailUse = async (newUser, errorObj) => {
     const emails = await UserDB.find({email: newUser?.email}).exec()
@@ -15,32 +13,34 @@ const validateUsernameUse = async (newUser, errorObj) => {
         errorObj.usernameNotAvailable = "The username is already in use, try another one."
 }
 
-const validateUserInfo = async  (req,res,next) => {
+const validateUserInfo = async (req, res, next) => {
     const newUser = await normalizeUser(req.body)
     const errorObj = {}
 
-    if (validator.isEmpty(newUser.name))
+    if (await nameIsEmpty(newUser.name))
         errorObj.name = "Name is require"
+    else if (!await isValidName(newUser.name))
+        errorObj.nameLength = "Invalid name, min. length is 2, max. length is 40"
 
-    if (!validator.isLength(newUser.name, {min: 2, max: 40}))
-        errorObj.nameLength = "Invalid name, min length is 2, max is 40"
-
-    if (validator.isEmpty(newUser.lastName))
+    if (await nameIsEmpty(newUser.lastname))
         errorObj.lastname = "Lastname is require"
+    else if (!await isValidName(newUser.lastname))
+        errorObj.lastnameLength = "Invalid lastname, min. length is 2, max. length is 40"
 
-    if (!validator.isLength(newUser.lastName, {min: 2, max: 40}))
-        errorObj.lastnameLength = "Invalid lastname, min length is 2, max is 40"
+    if (await emailIsEmpty(newUser.email))
+        errorObj.email = "E-mail is required";
+    else if (!await isValidEmail(newUser.email))
+        errorObj.emailFormat = "Invalid format, format example: something@somethingElse.com"
 
-    if (validator.isEmpty(newUser.email))
-        errorObj.email = "Email is require";
-
-    if (!validator.isEmail(newUser.email))
-        errorObj.emailFormat = "Invalid format, format example : something@somethingElse.com"
+    if (await nameIsEmpty(newUser.username))
+        errorObj.username = "Username is required";
+    else if (!await isValidName(newUser.username))
+        errorObj.usernameLength = "Invalid username, min length is 2, max is 40"
 
     await validateEmailUse(newUser, errorObj);
     await validateUsernameUse(newUser, errorObj);
 
-    if (!isEmpty(errorObj)) res.status(400).json(errorObj); else next();
+    if (!await isEmptyObject(errorObj)) res.status(400).json(errorObj); else next();
 
 }
 

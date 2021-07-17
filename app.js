@@ -7,6 +7,7 @@ const cookieParser = require('cookie-parser');
 const logger = require('morgan');
 const bodyParser = require('body-parser');
 const expressJWT = require('express-jwt')
+const mongoose = require('mongoose')
 require('dotenv').config()
 
 app.use(logger('dev'));
@@ -22,6 +23,11 @@ app.use(expressJWT({
 
 /**All routes files are in this folder, node search in index.js and there is redirected*/
 app.use(require('./Routes'));
+
+// Make Mongoose use `findOneAndUpdate()`. Note that this option is `true`
+// by default, you need to set it to false.
+mongoose.set('useFindAndModify', false);
+
 
 app.set('view engine', 'pug');
 

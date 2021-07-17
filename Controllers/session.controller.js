@@ -17,16 +17,14 @@ const register = async (req, res, next) => {
     try {
         const newUser = await normalizeUser(req.body)
         const hashPass = await hashUserPass(newUser?.password)
-
         const userWithHashPass = {
             name: newUser.name,
-            lastName: newUser.lastName,
+            lastName: newUser.lastname,
             email: newUser.email,
             username: newUser.username,
             password: hashPass
         }
         createUser(userWithHashPass, res)
-
     } catch (err) {
         res.status(500).json(err.message);
     }
@@ -37,7 +35,6 @@ const login = async (req, res, next) => {
         const {password, email, username} = req.body;
         const users = await UserDB.find({email: email}).exec();
         const userNoExist = users[0] === undefined
-
         if (userNoExist) {
             res.status(404).json('User not found');
         } else {
@@ -45,13 +42,12 @@ const login = async (req, res, next) => {
             const correctPass = verifyUserPass(password, hashPass);
             if (correctPass) {
                 const token = await jwt.sign({username}, process.env.SECRET_TOKEN_KEY, {expiresIn: "2 days"});
-                res.status(200).json({login: true, token})
+                res.status(200).json({login: true, token,user: users[0]})
             } else {
                 res.status(401).json({login: false, token: ''})
             }
         }
     } catch (e) {
-        console.table(e)
         res.status(500).json(e);
     }
 }

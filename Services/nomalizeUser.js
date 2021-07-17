@@ -2,7 +2,7 @@ const normalizeUser = async (user) => {
     try {
         return {
             name : user?.name || '',
-            lastName: user?.lastname || '',
+            lastname: user?.lastname || '',
             email: user?.email || '',
             username: user?.username || '' ,
             password: user?.password || ''

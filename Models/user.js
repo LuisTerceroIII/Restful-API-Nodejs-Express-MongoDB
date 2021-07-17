@@ -3,12 +3,18 @@ const Schema = mongoose.Schema;
 
 let userSchema = new Schema({
     name: {type: String},
-    lastName: {type: String},
+    lastname: {type: String},
     email: {type: String},
     username: {type: String},
-    password: {type: String}
+    password: {type: String},
+    contacts : [{type: mongoose.Schema.Types.ObjectId, ref : 'Contact'}]
 });
 
-let user = mongoose.model("User", userSchema);
+userSchema.statics.addContact = (contact,user) => {
+    user.contacts.push(contact._id)
+    user.save()
+}
 
-module.exports = user;
+const User = mongoose.model("User", userSchema);
+
+module.exports = User;

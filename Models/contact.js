@@ -1,21 +1,21 @@
-const mongoose = require('../Config/Dbconection/connectionDb')
-const Schema = mongoose.Schema
+const mongoose = require("../Config/Dbconection/connectionDb");
+const Schema = mongoose.Schema;
 
 let contactSchema = new Schema({
-    id: {type: Number},
+    userId: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref : 'User'
+    },
     name: {type: String},
-    lastName: {type: String},
+    lastname: {type: String},
+    phoneNumber: {type: String},
     age: {type: Number, min: 0},
-    email: {type: String}
-})
+    email: {type: String},
+    company: {type: String},
+    homepage: {type: String},
+    note: {type: String}
+});
 
-contactSchema.methods.presentation = () => {
-    let saludos = `Hello my name is ${this.name} ${this.lastName}, i have ${this.age} years old and my email is ${this.email}`
-    console.log(saludos)
-}
+const Contact = mongoose.model("Contact", contactSchema);
 
-let Contacts = mongoose.model('Contact', contactSchema);
-
-
-module.exports = Contacts;
-
+module.exports = {Contact,contactSchema };
